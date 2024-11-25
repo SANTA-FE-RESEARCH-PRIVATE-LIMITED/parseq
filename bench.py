@@ -32,7 +32,7 @@ def main(config: DictConfig):
     torch.backends.cudnn.benchmark = False
     torch.use_deterministic_algorithms(True)
 
-    device = config.get('device', 'cuda')
+    device = config.get('device', 'cpu')
 
     h, w = config.data.img_size
     x = torch.rand(1, 3, h, w, device=device)
