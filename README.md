@@ -85,7 +85,7 @@ platform=cpu
 # Generate requirements files for specified PyTorch platform
 make torch-${platform}
 # Install the project and core + train + test dependencies. Subsets: [dev,train,test,bench,tune]
-pip install -r requirements/core.${platform}.txt -e .[train,test]
+pip install -r requirements/core.${platform}.txt -e .[test,bench]
  ```
 #### Updating dependency version pins
 ```bash
