@@ -76,6 +76,10 @@ An [interactive Gradio demo](https://huggingface.co/spaces/baudm/PARSeq-OCR) hos
 ### Installation
 Requires Python >= 3.9 and PyTorch >= 2.0. The default requirements files will install the latest versions of the dependencies (as of February 22, 2024).
 ```bash
+# Install header files required for compiling Python C extensions
+sudo apt-get install python3-dev
+# Install build essentials
+sudo apt-get install build-essential
 # Use specific platform build. Other PyTorch 2.0 options: cu118, cu121, rocm5.7
 platform=cpu
 # Generate requirements files for specified PyTorch platform
