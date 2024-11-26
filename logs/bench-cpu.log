@@ -1,0 +1,12 @@
+<torch.utils.benchmark.utils.common.Measurement object at 0x70d3e07c9ac0>
+model(x)
+  Median: 71.47 ms
+  IQR:    0.94 ms (71.17 to 72.11)
+  14 measurements, 1 runs per measurement, 1 thread
+| module                | #parameters   | #flops   | #activations   |
+|:----------------------|:--------------|:---------|:---------------|
+| model                 | 23.833M       | 3.103G   | 6.421M         |
+|  encoder              |  21.381M      |  2.729G  |  5.358M        |
+|  decoder              |  2.368M       |  0.37G   |  1.053M        |
+|  head                 |  36.575K      |  3.794M  |  9.88K         |
+|  text_embed.embedding |  37.248K      |  0       |  0             |

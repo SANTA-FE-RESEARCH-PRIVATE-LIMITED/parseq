@@ -4,6 +4,8 @@ defaults:
   - _self_
   - override hydra/job_logging: disabled
 
+device: cpu  # or 'cuda' if you want to run on the GPU
+
 hydra:
   output_subdir: null
   run:
