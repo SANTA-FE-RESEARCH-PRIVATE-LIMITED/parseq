@@ -22,7 +22,15 @@ pip3 install --user virtualenv
 # Generate requirements files for specified PyTorch platform
 make torch-cpu
 # Install the project and core + train + test dependencies. Subsets: [dev,train,test,bench,tune]
-pip install -r requirements/core.cpu.txt -e .[train,test,bench]
+pip install -r requirements/core.cpu.txt -e .[test,bench]
+```
+
+### GPU
+```bash
+# Generate requirements files for specified PyTorch platform
+make torch-cu121
+# Install the project and core + train + test dependencies. Subsets: [dev,train,test,bench,tune]
+pip install -r requirements/core.cu121.txt -e .[train,test,bench,tune]
 ```
 
 ### Datasets
@@ -53,6 +61,20 @@ python -u -W ignore test.py pretrained=parseq --device cpu 2>&1 | tee logs/test-
 - Run `bench.py` to benchmark the forward pass.
 ```bash
 python -u -W ignore bench.py model=parseq model.decode_ar=false model.refine_iters=3 device=cpu 2>&1 | tee logs/bench-cpu.log
+```
+
+### GPU
+- Run `read.py` to check the single image inference for installation.
+```bash
+python -u -W ignore read.py pretrained=parseq --images demo_images/* --device=cuda 2>&1 | tee logs/read-gpu.log
+```
+- Run `test.py` to generate metrics for test split.
+```bash
+python -u -W ignore test.py pretrained=parseq --device cuda 2>&1 | tee logs/test-gpu.log
+```
+- Run `bench.py` to benchmark the forward pass.
+```bash
+python -u -W ignore bench.py model=parseq model.decode_ar=false model.refine_iters=3 device=cuda 2>&1 | tee logs/bench-gpu.log
 ```
 
 ## Citation
