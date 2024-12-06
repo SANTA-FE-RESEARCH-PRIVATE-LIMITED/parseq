@@ -2,18 +2,36 @@
 
 ## Installation
 
+### System
+- OS : Ubuntu 22.04.5 LTS (Jammy Jellyfish)
+- GPU : 
+  - Nvidia L4 (24GB VRAM)
+  - CUDA Toolkit : v11.8 (11.8.89)
+  - Driver : v535 (535.104.05)
+- vCPU : 25 x Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz
+- RAM : 110GB
+
 ### General
+- Update and upgrade the system
 ```bash
-# Update and upgrade the system
-sudo apt-get update -y && apt-get upgrade -y
-# Install python and its dependencies
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get install -y software-properties-common build-essential
-sudo apt install python3.12 python3.12-venv python3.12-dev
-# Install pip and virtualenv
-sudo apt install python3-pip
+apt-get update -y && apt-get upgrade -y
+```
+- Install python and its dependencies
+```bash
+add-apt-repository ppa:deadsnakes/ppa
+apt-get install -y software-properties-common build-essential
+apt install python3.12 python3.12-venv python3.12-dev
+```
+- Install pip and virtualenv
+```bash
+apt install python3-pip
 pip3 install --user --upgrade pip
 pip3 install --user virtualenv
+```
+- Create a virtual environment and activate it.
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### CPU
@@ -28,9 +46,9 @@ pip install -r requirements/core.cpu.txt -e .[test,bench]
 ### GPU
 ```bash
 # Generate requirements files for specified PyTorch platform
-make torch-cu121
+make torch-cu118
 # Install the project and core + train + test dependencies. Subsets: [dev,train,test,bench,tune]
-pip install -r requirements/core.cu121.txt -e .[train,test,bench,tune]
+pip install -r requirements/core.cu118.txt -e .[train,test,bench,tune]
 ```
 
 ### Datasets
