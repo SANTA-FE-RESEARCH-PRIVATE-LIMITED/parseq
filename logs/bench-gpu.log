@@ -1,8 +1,8 @@
-<torch.utils.benchmark.utils.common.Measurement object at 0x7fda01033bc0>
+<torch.utils.benchmark.utils.common.Measurement object at 0x7fc0b6be3680>
 model(x)
-  Median: 25.70 ms
-  IQR:    0.35 ms (25.58 to 25.93)
-  39 measurements, 1 runs per measurement, 1 thread
+  Median: 16.43 ms
+  IQR:    0.09 ms (16.38 to 16.47)
+  61 measurements, 1 runs per measurement, 1 thread
 | module                | #parameters   | #flops   | #activations   |
 |:----------------------|:--------------|:---------|:---------------|
 | model                 | 23.833M       | 3.103G   | 6.421M         |
