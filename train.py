@@ -35,7 +35,7 @@ from strhub.models.utils import get_pretrained_weights
 
 # Copied from OneCycleLR
 def _annealing_cos(start, end, pct):
-    'Cosine anneal from `start` to `end` as pct goes from 0.0 to 1.0.'
+    """Cosine anneal from `start` to `end` as pct goes from 0.0 to 1.0."""
     cos_out = math.cos(math.pi * pct) + 1
     return end + (start - end) / 2.0 * cos_out
 
