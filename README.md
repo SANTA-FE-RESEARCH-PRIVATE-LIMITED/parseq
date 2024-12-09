@@ -95,6 +95,19 @@ python -u -W ignore test.py pretrained=parseq --device cuda 2>&1 | tee logs/test
 python -u -W ignore bench.py model=parseq model.decode_ar=false model.refine_iters=3 device=cuda 2>&1 | tee logs/bench-gpu.log
 ```
 
+## Usage
+
+### Training
+- Create directory for storing logs.
+```bash
+mkdir -p logs/trial
+```
+- Run `train.py` to train the model.
+```bash
+./train.py --config-name main-hindi 2>&1 | tee logs/trial/run_01.log
+```
+- The output are stored in `outputs/parseq/` directory.
+
 ## Citation
 ```bibtex
 @InProceedings{bautista2022parseq,
