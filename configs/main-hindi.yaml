@@ -12,7 +12,7 @@ model:
   charset_train: ???
   # For charset_test, ordering doesn't matter.
   charset_test: ???
-  batch_size: 128
+  batch_size: 384
   weight_decay: 0.0
   warmup_pct: 0.075  # equivalent to 1.5 epochs of warm up
 
@@ -33,8 +33,10 @@ data:
 trainer:
   _target_: pytorch_lightning.Trainer
   _convert_: all
-  val_check_interval: 1000
-  #max_steps: 169680  # 20 epochs x 8484 steps (for batch size = 384, real data)
+  # 2MM synthetic data for batch size 384
+  val_check_interval: 5209
+  # 20 epochs of 5209 steps
+  #max_steps: 104180
   max_epochs: 20
   gradient_clip_val: 20
   accelerator: gpu
