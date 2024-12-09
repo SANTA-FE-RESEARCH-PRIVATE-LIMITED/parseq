@@ -50,6 +50,7 @@ make torch-cu118
 # Install the project and core + train + test dependencies. Subsets: [dev,train,test,bench,tune]
 pip install -r requirements/core.cu118.txt -e .[train,test,bench,tune]
 ```
+- Exact list of packages installed is available @ `requirements.txt` file.
 
 ### Datasets
 - Make a directory for the datasets.
