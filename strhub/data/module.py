@@ -28,7 +28,8 @@ class SceneTextDataModule(pl.LightningDataModule):
     TEST_BENCHMARK_SUB = ('IIIT5k', 'SVT', 'IC13_857', 'IC15_1811', 'SVTP', 'CUTE80')
     TEST_BENCHMARK = ('IIIT5k', 'SVT', 'IC13_1015', 'IC15_2077', 'SVTP', 'CUTE80')
     TEST_NEW = ('ArT', 'COCOv1.4', 'Uber')
-    TEST_ALL = tuple(set(TEST_BENCHMARK_SUB + TEST_BENCHMARK + TEST_NEW))
+    TEST_INDICSTR = ('Hindi',)
+    TEST_ALL = tuple(set(TEST_BENCHMARK_SUB + TEST_BENCHMARK + TEST_NEW + TEST_INDICSTR))
 
     def __init__(
         self,
@@ -136,10 +137,10 @@ class SceneTextDataModule(pl.LightningDataModule):
 
     def test_dataloaders(self, subset):
         transform = self.get_transform(self.img_size, rotation=self.rotation)
-        root = PurePath(self.root_dir, 'test')
+        root = PurePath(self.root_dir)
         datasets = {
             s: LmdbDataset(
-                str(root / s),
+                str(root / s / 'test'),
                 self.charset_test,
                 self.max_label_length,
                 self.min_image_dim,

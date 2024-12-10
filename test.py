@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import argparse
-import string
 import sys
 from dataclasses import dataclass
 
@@ -73,21 +72,9 @@ def main():
     parser.add_argument('--data_root', default='data')
     parser.add_argument('--batch_size', type=int, default=512)
     parser.add_argument('--num_workers', type=int, default=4)
-    parser.add_argument('--cased', action='store_true', default=False, help='Cased comparison')
-    parser.add_argument('--punctuation', action='store_true', default=False, help='Check punctuation')
-    parser.add_argument('--new', action='store_true', default=False, help='Evaluate on new benchmark datasets')
-    parser.add_argument('--rotation', type=int, default=0, help='Angle of rotation (counter clockwise) in degrees.')
     parser.add_argument('--device', default='cuda')
     args, unknown = parser.parse_known_args()
     kwargs = parse_model_args(unknown)
-
-    charset_test = string.digits + string.ascii_lowercase
-    if args.cased:
-        charset_test += string.ascii_uppercase
-    if args.punctuation:
-        charset_test += string.punctuation
-    kwargs.update({'charset_test': charset_test})
-    print(f'Additional keyword arguments: {kwargs}')
 
     model = load_from_checkpoint(args.checkpoint, **kwargs).eval().to(args.device)
     hp = model.hparams
@@ -100,14 +87,11 @@ def main():
         hp.charset_test,
         args.batch_size,
         args.num_workers,
-        False,
-        rotation=args.rotation,
+        augment=False,
+        remove_whitespace=False,
+        normalize_unicode=False,
     )
-
-    test_set = SceneTextDataModule.TEST_BENCHMARK_SUB + SceneTextDataModule.TEST_BENCHMARK
-    if args.new:
-        test_set += SceneTextDataModule.TEST_NEW
-    test_set = sorted(set(test_set))
+    test_set = sorted(set(SceneTextDataModule.TEST_INDICSTR))
 
     results = {}
     max_width = max(map(len, test_set))
@@ -131,11 +115,8 @@ def main():
         results[name] = Result(name, total, accuracy, mean_ned, mean_conf, mean_label_length)
 
     result_groups = {
-        'Benchmark (Subset)': SceneTextDataModule.TEST_BENCHMARK_SUB,
-        'Benchmark': SceneTextDataModule.TEST_BENCHMARK,
+        'IndicSTR': SceneTextDataModule.TEST_INDICSTR,
     }
-    if args.new:
-        result_groups.update({'New': SceneTextDataModule.TEST_NEW})
     with open(args.checkpoint + '.log.txt', 'w') as f:
         for out in [f, sys.stdout]:
             for group, subset in result_groups.items():
