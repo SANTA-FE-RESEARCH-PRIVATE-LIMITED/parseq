@@ -22,6 +22,10 @@ add-apt-repository ppa:deadsnakes/ppa
 apt-get install -y software-properties-common build-essential
 apt install python3.12 python3.12-venv python3.12-dev
 ```
+- Add fonts for matplotlib
+```bash
+apt install fonts-noto-core
+```
 - Install pip and virtualenv
 ```bash
 apt install python3-pip
