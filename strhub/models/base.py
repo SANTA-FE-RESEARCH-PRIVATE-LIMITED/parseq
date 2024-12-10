@@ -42,6 +42,7 @@ class BatchResult:
     label_length: int
     loss: Tensor
     loss_numel: int
+    predictions: list[str]
 
 
 EPOCH_OUTPUT = list[dict[str, BatchResult]]
@@ -131,16 +132,18 @@ class BaseSystem(pl.LightningModule, ABC):
 
         probs = logits.softmax(-1)
         preds, probs = self.tokenizer.decode(probs)
+        predictions = []
         for pred, prob, gt in zip(preds, probs, labels):
             confidence += prob.prod().item()
             pred = self.charset_adapter(pred)
+            predictions.append(pred)
             # Follow ICDAR 2019 definition of N.E.D.
             ned += edit_distance(pred, gt) / max(len(pred), len(gt))
             if pred == gt:
                 correct += 1
             total += 1
             label_length += len(pred)
-        return dict(output=BatchResult(total, correct, ned, confidence, label_length, loss, loss_numel))
+        return dict(output=BatchResult(total, correct, ned, confidence, label_length, loss, loss_numel, predictions))
 
     @staticmethod
     def _aggregate_results(outputs: EPOCH_OUTPUT) -> tuple[float, float, float]:
