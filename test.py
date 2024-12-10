@@ -15,9 +15,12 @@
 # limitations under the License.
 
 import argparse
+import json
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 
+import pandas
 from tqdm import tqdm
 
 import torch
@@ -92,8 +95,12 @@ def main():
         normalize_unicode=False,
     )
     test_set = sorted(set(SceneTextDataModule.TEST_INDICSTR))
+    result_dir = Path(args.checkpoint).parent.parent / 'results'
+    result_dir.mkdir(exist_ok=True, parents=True)
 
-    results = {}
+    results_summary = {}
+    results_ground_truths = {}
+    results_predictions = {}
     max_width = max(map(len, test_set))
     for name, dataloader in datamodule.test_dataloaders(test_set).items():
         total = 0
@@ -101,6 +108,9 @@ def main():
         ned = 0
         confidence = 0
         label_length = 0
+        ground_truths = []
+        predictions = []
+        result = {}
         for imgs, labels in tqdm(iter(dataloader), desc=f'{name:>{max_width}}'):
             res = model.test_step((imgs.to(model.device), labels), -1)['output']
             total += res.num_samples
@@ -108,21 +118,26 @@ def main():
             ned += res.ned
             confidence += res.confidence
             label_length += res.label_length
-        accuracy = 100 * correct / total
-        mean_ned = 100 * (1 - ned / total)
-        mean_conf = 100 * confidence / total
-        mean_label_length = label_length / total
-        results[name] = Result(name, total, accuracy, mean_ned, mean_conf, mean_label_length)
+            ground_truths.extend(labels)
+            predictions.extend(res.predictions)
+        result['total'] = total
+        result['accuracy'] = 100 * correct / total
+        result['mean_ned'] = 100 * (1 - ned / total)
+        result['mean_conf'] = 100 * confidence / total
+        result['mean_label_length'] = label_length / total
+        results_summary[name] = result
+        results_ground_truths[name] = ground_truths
+        results_predictions[name] = predictions
 
-    result_groups = {
-        'IndicSTR': SceneTextDataModule.TEST_INDICSTR,
-    }
-    with open(args.checkpoint + '.log.txt', 'w') as f:
-        for out in [f, sys.stdout]:
-            for group, subset in result_groups.items():
-                print(f'{group} set:', file=out)
-                print_results_table([results[s] for s in subset], out)
-                print('\n', file=out)
+    for test_name in SceneTextDataModule.TEST_INDICSTR:
+        with open(result_dir / f'{test_name}_summary.json', 'w') as f:
+            json.dump(results_summary[test_name], f, indent=2)
+        df = pandas.DataFrame(
+            list(zip(results_ground_truths[test_name], results_predictions[test_name])),
+            columns=['label', 'prediction']
+        )
+        df['correct'] = df['label'] == df['prediction']
+        df.to_csv(result_dir / f'{test_name}_predictions.csv', index=False)
 
 
 if __name__ == '__main__':
