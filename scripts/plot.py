@@ -114,7 +114,7 @@ def create_image_prediction_plots(image_root, result_root, image_file, predictio
 if __name__ == "__main__":
     create_image_prediction_plots(
         image_root="data/Hindi",
-        result_root="outputs/parseq/2024-12-07_13-31-12/results",
+        result_root="indic-models/parseq/hindi/run_01/pretrained/results",
         image_file="Hindi_images.csv",
         prediction_file="Hindi_predictions.csv",
     )
